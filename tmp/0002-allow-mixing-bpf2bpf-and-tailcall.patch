@@ -1,0 +1,27 @@
+From 65293ae102ad1e3b6d63aa692972430ea9a1f53b Mon Sep 17 00:00:00 2001
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Sun, 12 Feb 2023 10:43:56 +0800
+Subject: [PATCH 2/2] allow mixing bpf2bpf and tailcall
+
+Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+---
+ arch/loongarch/net/bpf_jit.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 2d952110be72..01892dfa637e 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1269,3 +1269,9 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+ 
+ 	return prog;
+ }
++
++/* Indicate the JIT backend supports mixing bpf2bpf and tailcalls. */
++bool bpf_jit_supports_subprog_tailcalls(void)
++{
++	return true;
++}
+-- 
+2.38.1
+

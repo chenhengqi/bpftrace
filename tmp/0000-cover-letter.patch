@@ -1,0 +1,17 @@
+From 65293ae102ad1e3b6d63aa692972430ea9a1f53b Mon Sep 17 00:00:00 2001
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Sun, 12 Feb 2023 10:47:59 +0800
+Subject: [PATCH 0/2] *** SUBJECT HERE ***
+
+*** BLURB HERE ***
+
+Hengqi Chen (2):
+  fix func addr
+  allow mixing bpf2bpf and tailcall
+
+ arch/loongarch/net/bpf_jit.c | 29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
+
+-- 
+2.38.1
+
