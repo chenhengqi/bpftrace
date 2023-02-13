@@ -1,0 +1,18 @@
+From c872e780cfb2f5a73d593dc2610e55b3e3234ec8 Mon Sep 17 00:00:00 2001
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Mon, 13 Feb 2023 22:56:42 +0800
+Subject: [PATCH 0/2] *** SUBJECT HERE ***
+
+*** BLURB HERE ***
+
+Hengqi Chen (2):
+  LoongArch: BPF: Use 4 instructions for function address in JIT
+  LoongArch: BPF: Support mixing bpf2bpf and tailcalls
+
+ arch/loongarch/net/bpf_jit.c |  8 +++++++-
+ arch/loongarch/net/bpf_jit.h | 21 +++++++++++++++++++++
+ 2 files changed, 28 insertions(+), 1 deletion(-)
+
+-- 
+2.31.1
+

@@ -1,0 +1,30 @@
+From c872e780cfb2f5a73d593dc2610e55b3e3234ec8 Mon Sep 17 00:00:00 2001
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Sun, 12 Feb 2023 10:43:56 +0800
+Subject: [PATCH 2/2] LoongArch: BPF: Support mixing bpf2bpf and tailcalls
+
+The current implementation already allow such mixing.
+Let's enable it in JIT.
+
+Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+---
+ arch/loongarch/net/bpf_jit.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 288003a9f0ca..e70c846efaa1 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1248,3 +1248,9 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+ 
+ 	return prog;
+ }
++
++/* Indicate the JIT backend supports mixing bpf2bpf and tailcalls. */
++bool bpf_jit_supports_subprog_tailcalls(void)
++{
++	return true;
++}
+-- 
+2.31.1
+
