@@ -1,0 +1,26 @@
+libbpf: prog 'tracepoint__syscalls__sys_enter_open_tree': BPF program load failed: Invalid argument
+libbpf: prog 'tracepoint__syscalls__sys_enter_open_tree': -- BEGIN PROG LOAD LOG --
+reg type unsupported for arg#0 function tracepoint__syscalls__sys_enter_open_tree#33
+0: R1=ctx(off=0,imm=0) R10=fp0
+; return subprog_tail(ctx);
+0: (85) call pc+2
+reg type unsupported for arg#0 function subprog_tail#35
+caller:
+ R10=fp0
+callee:
+ frame1: R1=ctx(off=0,imm=0) R10=fp0
+; __noinline int subprog_tail(void *ctx /*struct trace_event_raw_sys_enter* ctx*/)
+3: (bf) r6 = r1                       ; frame1: R1=ctx(off=0,imm=0) R6_w=ctx(off=0,imm=0)
+; asm volatile("r1 = %[ctx]\n\t"
+4: (18) r7 = 0x9000000111741600       ; frame1: R7_w=map_ptr(off=0,ks=4,vs=4,imm=0)
+6: (bf) r1 = r6                       ; frame1: R1_w=ctx(off=0,imm=0) R6_w=ctx(off=0,imm=0)
+7: (bf) r2 = r7                       ; frame1: R2_w=map_ptr(off=0,ks=4,vs=4,imm=0) R7_w=map_ptr(off=0,ks=4,vs=4,imm=0)
+8: (b7) r3 = 0                        ; frame1: R3_w=0
+9: (85) call bpf_tail_call#12
+tail_calls are not allowed in non-JITed programs with bpf-to-bpf calls
+processed 7 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
+-- END PROG LOAD LOG --
+libbpf: prog 'tracepoint__syscalls__sys_enter_open_tree': failed to load: -22
+libbpf: failed to load object 'opensnoop_bpf'
+libbpf: failed to load BPF skeleton 'opensnoop_bpf': -22
+failed to load BPF object: -22
