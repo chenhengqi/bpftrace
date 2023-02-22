@@ -1,0 +1,195 @@
+diff --git a/tools/include/uapi/asm/bpf_perf_event.h b/tools/include/uapi/asm/bpf_perf_event.h
+index d7dfeab0d71a..ff52668abf8c 100644
+--- a/tools/include/uapi/asm/bpf_perf_event.h
++++ b/tools/include/uapi/asm/bpf_perf_event.h
+@@ -6,6 +6,8 @@
+ #include "../../arch/s390/include/uapi/asm/bpf_perf_event.h"
+ #elif defined(__riscv)
+ #include "../../arch/riscv/include/uapi/asm/bpf_perf_event.h"
++#elif defined(__loongarch__)
++#include "../../arch/loongarch/include/uapi/asm/bpf_perf_event.h"
+ #else
+ #include <uapi/asm-generic/bpf_perf_event.h>
+ #endif
+diff --git a/tools/testing/selftests/bpf/Makefile.docs b/tools/testing/selftests/bpf/Makefile.docs
+index eb6a4fea8c79..59c16ce6e827 100644
+--- a/tools/testing/selftests/bpf/Makefile.docs
++++ b/tools/testing/selftests/bpf/Makefile.docs
+@@ -49,11 +49,11 @@ $(OUTPUT)bpf-$1.rst: ../../../../include/uapi/linux/bpf.h
+ 		--filename $$< > $$@
+ 
+ $(OUTPUT)%.$2: $(OUTPUT)%.rst
+-ifndef RST2MAN_DEP
+-	$$(error "rst2man not found, but required to generate man pages")
+-endif
+-	$$(QUIET_GEN)rst2man --exit-status=1 $$< > $$@.tmp
+-	$$(QUIET_GEN)mv $$@.tmp $$@
++# ifndef RST2MAN_DEP
++# 	$$(error "rst2man not found, but required to generate man pages")
++# endif
++	#$$(QUIET_GEN)rst2man --exit-status=1 $$< > $$@.tmp
++	#$$(QUIET_GEN)mv $$@.tmp $$@
+ 
+ docs-clean-$1:
+ 	$$(call QUIET_CLEAN, eBPF_$1-manpage)
+diff --git a/tools/testing/selftests/bpf/prog_tests/user_ringbuf.c b/tools/testing/selftests/bpf/prog_tests/user_ringbuf.c
+index dae68de285b9..1b9480bfa4b5 100644
+--- a/tools/testing/selftests/bpf/prog_tests/user_ringbuf.c
++++ b/tools/testing/selftests/bpf/prog_tests/user_ringbuf.c
+@@ -19,6 +19,8 @@
+ 
+ #include "../progs/test_user_ringbuf.h"
+ 
++#define __NR_getrlimit 163
++
+ static size_t log_buf_sz = 1 << 20; /* 1 MB */
+ static char obj_log_buf[1048576];
+ static const long c_sample_size = sizeof(struct sample) + BPF_RINGBUF_HDR_SZ;
+diff --git a/tools/testing/selftests/bpf/progs/loop1.c b/tools/testing/selftests/bpf/progs/loop1.c
+index 50e66772c046..7b5819919267 100644
+--- a/tools/testing/selftests/bpf/progs/loop1.c
++++ b/tools/testing/selftests/bpf/progs/loop1.c
+@@ -1,11 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // Copyright (c) 2019 Facebook
+-#include <linux/sched.h>
+-#include <linux/ptrace.h>
+-#include <stdint.h>
+-#include <stddef.h>
+-#include <stdbool.h>
+-#include <linux/bpf.h>
++#include <vmlinux.h>
+ #include <bpf/bpf_helpers.h>
+ #include <bpf/bpf_tracing.h>
+ 
+diff --git a/tools/testing/selftests/bpf/progs/loop2.c b/tools/testing/selftests/bpf/progs/loop2.c
+index 947bb7e988c2..ff35dc0b5468 100644
+--- a/tools/testing/selftests/bpf/progs/loop2.c
++++ b/tools/testing/selftests/bpf/progs/loop2.c
+@@ -1,11 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // Copyright (c) 2019 Facebook
+-#include <linux/sched.h>
+-#include <linux/ptrace.h>
+-#include <stdint.h>
+-#include <stddef.h>
+-#include <stdbool.h>
+-#include <linux/bpf.h>
++#include <vmlinux.h>
+ #include <bpf/bpf_helpers.h>
+ #include <bpf/bpf_tracing.h>
+ 
+diff --git a/tools/testing/selftests/bpf/progs/loop3.c b/tools/testing/selftests/bpf/progs/loop3.c
+index 717dab14322b..8a68630cf7fa 100644
+--- a/tools/testing/selftests/bpf/progs/loop3.c
++++ b/tools/testing/selftests/bpf/progs/loop3.c
+@@ -1,11 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // Copyright (c) 2019 Facebook
+-#include <linux/sched.h>
+-#include <linux/ptrace.h>
+-#include <stdint.h>
+-#include <stddef.h>
+-#include <stdbool.h>
+-#include <linux/bpf.h>
++#include <vmlinux.h>
+ #include <bpf/bpf_helpers.h>
+ #include <bpf/bpf_tracing.h>
+ 
+diff --git a/tools/testing/selftests/bpf/progs/loop6.c b/tools/testing/selftests/bpf/progs/loop6.c
+index 38de0331e6b4..a6303889fc55 100644
+--- a/tools/testing/selftests/bpf/progs/loop6.c
++++ b/tools/testing/selftests/bpf/progs/loop6.c
+@@ -1,8 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+-#include <linux/ptrace.h>
+-#include <stddef.h>
+-#include <linux/bpf.h>
++#include <vmlinux.h>
+ #include <bpf/bpf_helpers.h>
+ #include <bpf/bpf_tracing.h>
+ 
+@@ -25,12 +23,6 @@ char _license[] SEC("license") = "GPL";
+ #define SG_CHAIN	0x01UL
+ #define SG_END		0x02UL
+ 
+-struct scatterlist {
+-	unsigned long   page_link;
+-	unsigned int    offset;
+-	unsigned int    length;
+-};
+-
+ #define sg_is_chain(sg)		((sg)->page_link & SG_CHAIN)
+ #define sg_is_last(sg)		((sg)->page_link & SG_END)
+ #define sg_chain_ptr(sg)	\
+@@ -61,7 +53,7 @@ static inline struct scatterlist *get_sgp(struct scatterlist **sgs, int i)
+ 	return sgp;
+ }
+ 
+-int config = 0;
++int config_ = 0;
+ int result = 0;
+ 
+ SEC("kprobe/virtqueue_add_sgs")
+@@ -72,7 +64,7 @@ int BPF_KPROBE(trace_virtqueue_add_sgs, void *unused, struct scatterlist **sgs,
+ 	__u64 length1 = 0, length2 = 0;
+ 	unsigned int i, n, len;
+ 
+-	if (config != 0)
++	if (config_ != 0)
+ 		return 0;
+ 
+ 	for (i = 0; (i < VIRTIO_MAX_SGS) && (i < out_sgs); i++) {
+@@ -93,7 +85,7 @@ int BPF_KPROBE(trace_virtqueue_add_sgs, void *unused, struct scatterlist **sgs,
+ 		}
+ 	}
+ 
+-	config = 1;
++	config_ = 1;
+ 	result = length2 - length1;
+ 	return 0;
+ }
+diff --git a/tools/testing/selftests/bpf/progs/test_bpf_nf.c b/tools/testing/selftests/bpf/progs/test_bpf_nf.c
+index 227e85e85dda..cad37aca3f6d 100644
+--- a/tools/testing/selftests/bpf/progs/test_bpf_nf.c
++++ b/tools/testing/selftests/bpf/progs/test_bpf_nf.c
+@@ -9,6 +9,11 @@
+ #define EINVAL 22
+ #define ENOENT 2
+ 
++enum nf_nat_manip_type {
++	NF_NAT_MANIP_SRC,
++	NF_NAT_MANIP_DST
++};
++
+ extern unsigned long CONFIG_HZ __kconfig;
+ 
+ int test_einval_bpf_tuple = 0;
+diff --git a/tools/testing/selftests/bpf/progs/test_overhead.c b/tools/testing/selftests/bpf/progs/test_overhead.c
+index abb7344b531f..9270c86b94cb 100644
+--- a/tools/testing/selftests/bpf/progs/test_overhead.c
++++ b/tools/testing/selftests/bpf/progs/test_overhead.c
+@@ -1,9 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2019 Facebook */
+-#include <stdbool.h>
+-#include <stddef.h>
+-#include <linux/bpf.h>
+-#include <linux/ptrace.h>
++#include <vmlinux.h>
+ #include <bpf/bpf_helpers.h>
+ #include <bpf/bpf_tracing.h>
+ 
+diff --git a/tools/testing/selftests/bpf/progs/test_vmlinux.c b/tools/testing/selftests/bpf/progs/test_vmlinux.c
+index e9dfa0313d1b..a04797aad145 100644
+--- a/tools/testing/selftests/bpf/progs/test_vmlinux.c
++++ b/tools/testing/selftests/bpf/progs/test_vmlinux.c
+@@ -8,6 +8,7 @@
+ #include <bpf/bpf_core_read.h>
+ 
+ #define MY_TV_NSEC 1337
++#define __NR_nanosleep 101
+ 
+ bool tp_called = false;
+ bool raw_tp_called = false;
